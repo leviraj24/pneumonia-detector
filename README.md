@@ -28,19 +28,22 @@ The system emphasizes explainability and continuous learning:
 Screenshots of the application in action:
 
 ### Main Interface
-![Main Interface](https://github.com/user-attachments/assets/0d8e7b74-7f0a-4ecb-9700-b17f74e955ca)
+<img width="1912" height="1023" alt="image" src="https://github.com/user-attachments/assets/51df94c1-15c8-457b-8413-67cd549e77c1" />
+
 
 ### Selecting an Image
-![Selecting an Image](https://github.com/user-attachments/assets/1d98a643-fe48-4338-a6af-403e72ffc0bc)
+<img width="1919" height="1016" alt="image" src="https://github.com/user-attachments/assets/a2373aa5-91e3-4ee5-bbd5-e27d04b34a96" />
 
 ### Model Prediction
-![Model Prediction](https://github.com/user-attachments/assets/a706e8e5-3d6e-41d9-9633-0f59aa87df4a)
+<img width="1913" height="1013" alt="image" src="https://github.com/user-attachments/assets/0b76292a-5db5-40f9-8ca3-0ac98df9732d" />
 
 ### Grad-CAM Heatmap Explanation
-![Grad-CAM Heatmap](https://github.com/user-attachments/assets/df053d98-2466-41e8-8c85-e4dfa9b7a466)
+<img width="1919" height="996" alt="image" src="https://github.com/user-attachments/assets/ec2a6dd8-e458-4876-a5cf-4976685a1e1b" />
+
 
 ### Feedback Option
-![Feedback Option](https://github.com/user-attachments/assets/7658b1d1-c413-4d02-a32b-610b3f002389)
+<img width="527" height="294" alt="image" src="https://github.com/user-attachments/assets/93dcc5e4-7102-4721-b31f-8721d4a196e1" />
+
 
 *(All images are hosted on GitHub)*
 
