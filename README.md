@@ -19,7 +19,7 @@ The system emphasizes explainability and continuous learning:
 - **Efficient Model**: Pre-trained EfficientNet-B0 (ImageNet), fine-tuned on pneumonia X-rays
 - **Explainable AI**: Grad-CAM visualizations highlight decision-making regions
 - **Interactive GUI**: User-friendly Tkinter app to analyze images, view predictions, and provide feedback
-- **Active Learning**: Learns from mistakes! Misclassified images are fed back into the training loop
+- **Active Learning**: Misclassified images are stored and can be used for retraining
 - **Robust Evaluation**: Tracks AUC, Accuracy, Sensitivity, and Specificity
 - **Educational Focus**: A proof-of-concept for medical AI with explainability
 
@@ -48,19 +48,20 @@ Screenshots of the application in action:
 
 ```
 pneumonia-detector/
-├── data/                 # Datasets (ignored by Git)
-│   ├── train/            # Training set
-│   ├── val/              # Validation set
-│   └── feedback/         # Misclassified images for retraining
-├── models/               # Saved models (ignored by Git)
-│   └── best_efficientnet_b0.pth
+├── data/                 # Dataset (
+│   ├── train/            # Training set (downloaded from Kaggle)
+│   ├── val/              # Validation set (downloaded from Kaggle)
+│   └── feedback/         # Create this folder manually (for misclassified images)
+├── models/               # Saved models
+│   └── best_efficientnet_b0.pth   # Uploaded trained weights
 ├── src/                  # Core source code
 │   ├── app.py            # GUI application
 │   ├── datasets.py       # Data loading utilities
 │   ├── train_advanced.py # Training engine
 │   └── retrain_from_feedback.py # Active learning retraining
-├── venv/                 # Virtual environment (ignored by Git)
-├── .gitignore
+├── scripts/              # Utility scripts
+│   ├── export_model.py
+│   └── merge_corrections.py
 ├── README.md
 └── requirements.txt
 ```
@@ -69,8 +70,27 @@ pneumonia-detector/
 
 This project uses the **Chest X-Ray Images (Pneumonia)** dataset from Kaggle.
 
-- 📥 **[Download Dataset](https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia)**
-- 📂 **Setup**: Extract and place the `train/` and `val/` folders into `data/`. Optionally include `test/`.
+### 📥 Download Dataset
+
+1. Visit [Kaggle Dataset Page](https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia) (requires Kaggle account)
+2. Download the dataset
+3. Extract the `chest_xray` folder
+
+### 📂 Setup Instructions
+
+1. Place the extracted contents into the `data/` directory:
+   ```
+   data/
+   ├── train/
+   ├── val/
+   └── test/ (optional)
+   ```
+
+2. **Important**: Manually create a `data/feedback/` folder:
+   ```bash
+   mkdir data/feedback
+   ```
+   This folder will store misclassified images for retraining.
 
 ## 🚀 Installation & Setup
 
@@ -98,62 +118,89 @@ This project uses the **Chest X-Ray Images (Pneumonia)** dataset from Kaggle.
 
 ## ⚡ Usage Workflow
 
-### Step 1: Train the model
+### Step 1: Train the model (Optional - Pre-trained model included)
+
 ```bash
 python src/train_advanced.py
 ```
-*Saves `best_efficientnet_b0.pth` in `models/`.*
+
+*Saves `best_efficientnet_b0.pth` in `models/`. Note: A pre-trained model is already included in this repo.*
 
 ### Step 2: Run the GUI
+
 ```bash
 python src/app.py
 ```
+
 1. **Browse Image** → Choose an X-ray
 2. **Analyze Image** → Get prediction
 3. **Show Explanation** → View Grad-CAM heatmap
 4. **Correct / Incorrect** → Save feedback for retraining
 
 ### Step 3: Retrain with Feedback
+
 ```bash
 python src/retrain_from_feedback.py
 ```
-*Incorporates feedback images and improves the model.*
+
+*Incorporates misclassified images from `data/feedback/` into training.*
 
 ## 📈 Model Performance
 
-The model is trained to optimize for AUC (Area Under the Curve).
+The model was trained on the Kaggle dataset and optimized for AUC (Area Under the Curve).
 
 | Metric | Score | Description |
 |--------|-------|-------------|
-| **AUC** | ~1.00 | Ability to distinguish between pneumonia and normal cases |
-| **Accuracy** | ~93–100% | Overall percentage of correct predictions |
-| **Sensitivity** | ~100% | Percentage of pneumonia cases correctly identified |
-| **Specificity** | ~87–100% | Percentage of normal cases correctly identified |
+| **AUC** | ~1.00 | Distinguishes pneumonia vs normal cases |
+| **Accuracy** | ~93–100% | Overall correct predictions |
+| **Sensitivity** | ~100% | Pneumonia cases correctly identified |
+| **Specificity** | ~87–100% | Normal cases correctly identified |
 
-⚠️ **Note**: These scores are based on the Kaggle dataset's validation split. Real-world clinical performance will likely be lower.
+⚠️ **Note**: These scores are based on the Kaggle dataset validation split. Real-world clinical performance will likely be lower.
 
 ## 🛠️ Model Architecture
 
 - **Backbone**: EfficientNet-B0 (pre-trained on ImageNet)
-- **Strategy**: Two-phase fine-tuning (freeze → unfreeze layers)
-- **Explainability**: Grad-CAM heatmaps highlight decision-making regions
+- **Weights**: `models/best_efficientnet_b0.pth` (included in this repo)
+- **Training Strategy**: Two-phase fine-tuning (freeze → unfreeze layers)
+- **Explainability**: Grad-CAM heatmaps highlight decision regions
 
-## 📝 License
+## 📄 Dataset Attribution & Licensing
 
-This project is licensed under the MIT License. See LICENSE for details.
+- **Dataset**: [Chest X-Ray Images (Pneumonia)](https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia) by Paul Mooney, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+- **Model Weights**: `models/best_efficientnet_b0.pth` trained on the above dataset and released under CC BY 4.0 (attribution required for redistribution)
+- **Source Code**: Licensed under MIT License (see LICENSE file)
+
+### Model Usage & Redistribution
+
+These model weights are provided for research and educational use. Redistribution and commercial use are permitted under CC BY 4.0, but you must provide attribution to:
+- The original dataset authors (Kermany, Zhang, & Goldbaum)
+- This repository
 
 ## ⚠️ Medical Disclaimer
 
-**This tool is for educational and research purposes only. It must not be used for real medical diagnosis. Always consult a licensed medical professional for healthcare decisions.**
+**This tool is for educational and research purposes only. It must not be used for real medical diagnosis or clinical decision-making. Always consult a licensed medical professional for healthcare decisions.**
+
+This system has not been validated for clinical use and should not be relied upon for medical diagnosis.
+
+## 📝 License
+
+- **Source Code**: This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+- **Model Weights**: Released under CC BY 4.0 license
+- **Dataset**: Chest X-Ray Images (Pneumonia) by Paul Mooney, licensed under CC BY 4.0
 
 ## 🙏 Acknowledgments
 
 - **Dataset**: Kermany, Zhang, & Goldbaum (2018) – Kaggle Chest X-Ray Images
 - **Frameworks**: PyTorch, Tkinter, and the open-source community
+- **Model Architecture**: EfficientNet by Google Research
 
 ## 📧 Contact
 
 - **Author**: Levi Raj
 - **Email**: leviraj24@gmail.com
 - **GitHub**: [pneumonia-detector](https://github.com/leviraj24/pneumonia-detector)
-"# pneumonia-detector" 
+
+---
+
+**Disclaimer**: No patient-identifying information is included in this repository. All data handling complies with privacy guidelines.
